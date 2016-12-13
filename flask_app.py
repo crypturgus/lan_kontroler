@@ -55,7 +55,7 @@ def initdb_command():
 
 @app.route('/')
 def hello_world():
-    return 'Hello in LanControl App!'
+    return 'Hello in LanControl App! Testing get'
 from flask import request
 
 @app.route('/db', methods=['GET'])
