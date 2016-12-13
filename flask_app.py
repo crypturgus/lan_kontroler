@@ -58,8 +58,15 @@ def hello_world():
     return 'Hello in LanControl App! Testing get'
 from flask import request
 
+
+#GET /db?field1=5.2&field1=73.5 HTTP/1.1" 200 6 "-" "-" "83.22.52.57"
 @app.route('/db', methods=['GET'])
 def login():
     if request.method == 'GET':
-        with open('dupa.txt', 'w') as f:
-            f.write('dupa')
+        db = get_db()
+        db.execute('insert into board (ia14, ia15) values (?, ?)',
+                   [request.args.get['ia14'], request.args.get['ia15']])
+        db.commit()
+        return ''
+    else:
+        return 'ksakaska'
