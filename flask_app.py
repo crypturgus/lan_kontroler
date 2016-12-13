@@ -65,8 +65,12 @@ def login():
     if request.method == 'GET':
         db = get_db()
         db.execute('insert into board (ia14, ia15) values (?, ?)',
-                   [request.args.get['ia14'], request.args.get['ia15']])
+                   [request.args.get('ia14'), request.args.get('ia15')])
         db.commit()
-        return ''
+        return 'ok'
     else:
-        return 'ksakaska'
+        db = get_db()
+        db.execute('insert into board (id, ia14, ia15) values (?, ?, ?)',
+                   [2, request.args.get('ia14'), request.args.get('ia15')])
+        db.commit()
+        return 'ok'

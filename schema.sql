@@ -1,5 +1,5 @@
 create table board (
-	ID INT PRIMARY KEY NOT NULL,
+	id integer primary key autoincrement,
 	out0 int,
 	out1 int,
 	out2 int,
