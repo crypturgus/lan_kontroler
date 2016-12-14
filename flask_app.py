@@ -1,7 +1,17 @@
 import os
+
 import sqlite3
-from flask import Flask, request, session, g, redirect, url_for, abort, \
-     render_template, flash
+from flask import (
+    Flask,
+    request,
+    session,
+    g,
+    redirect,
+    url_for,
+    abort,
+    render_template,
+    flash,
+)
 
 # create our little application :)
 app = Flask(__name__)
@@ -32,17 +42,20 @@ def get_db():
         g.sqlite_db = connect_db()
     return g.sqlite_db
 
+
 @app.teardown_appcontext
 def close_db(error):
     """Closes the database again at the end of the request."""
     if hasattr(g, 'sqlite_db'):
         g.sqlite_db.close()
 
+
 def init_db():
     db = get_db()
     with app.open_resource('schema.sql', mode='r') as f:
         db.cursor().executescript(f.read())
     db.commit()
+
 
 @app.cli.command('initdb')
 def initdb_command():
@@ -51,15 +64,15 @@ def initdb_command():
     print 'Initialized the database.'
 
 
-
-
 @app.route('/')
 def hello_world():
-    return 'Hello in LanControl App! Testing get'
-from flask import request
+    db = get_db()
+    cur = db.execute('select ia7, ia8, ia14, ia15 from board  where ia14 is not null order by id desc')
+    entries = cur.fetchall()
+    return render_template('index.html', entries=entries)
 
-#no to INP6 i 7 + DHT22, temp i wilgotnosc
-#GET /db?field1=5.2&field1=73.5 HTTP/1.1" 200 6 "-" "-" "83.22.52.57"
+
+
 @app.route('/db', methods=['GET'])
 def bd_save_external_data():
     if request.method == 'GET':
@@ -70,5 +83,4 @@ def bd_save_external_data():
                     request.args.get('ia14'),
                     request.args.get('ia15')])
         db.commit()
-        return 'ok'
     return 'ok'
