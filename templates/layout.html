@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Lan Kontroler</title>
+    <script src="{{ url_for('static', filename='chartist.js') }} "></script>
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='chartist.min.css') }}">
+</head>
+<body>
+<div class=page>
+ {% block body %}{% endblock %}
+</div>
+
+</body>
+</html>

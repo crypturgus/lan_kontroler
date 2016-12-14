@@ -1,0 +1,16 @@
+{% extends "layout.html" %}
+{% block body %}
+{% for item in entries %}
+<div class="ct-chart ct-golden-section" id="chart1"></div>
+
+<ul>
+    <li>{{ item.ia14 }}</li>
+</ul>
+<script>
+    new Chartist.Line('#chart1', {
+    labels: [1, 2, 3, 4],
+    series: [[100, 120, 180, 200]]
+  });
+</script>
+{% endfor %}
+{% endblock %}
