@@ -58,19 +58,17 @@ def hello_world():
     return 'Hello in LanControl App! Testing get'
 from flask import request
 
-
+#no to INP6 i 7 + DHT22, temp i wilgotnosc
 #GET /db?field1=5.2&field1=73.5 HTTP/1.1" 200 6 "-" "-" "83.22.52.57"
 @app.route('/db', methods=['GET'])
-def login():
+def bd_save_external_data():
     if request.method == 'GET':
         db = get_db()
-        db.execute('insert into board (ia14, ia15) values (?, ?)',
-                   [request.args.get('ia14'), request.args.get('ia15')])
+        db.execute('insert into board (ia7, ia8, ia14, ia15) values (?, ?, ?, ?)',
+                   [request.args.get('ia7'),
+                    request.args.get('ia8'),
+                    request.args.get('ia14'),
+                    request.args.get('ia15')])
         db.commit()
         return 'ok'
-    else:
-        db = get_db()
-        db.execute('insert into board (id, ia14, ia15) values (?, ?, ?)',
-                   [2, request.args.get('ia14'), request.args.get('ia15')])
-        db.commit()
-        return 'ok'
+    return 'ok'
