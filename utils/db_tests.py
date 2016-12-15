@@ -4,7 +4,7 @@ import sqlite3
 
 from helpers import get_query_with_time_delta, get_series_and_labels, get_series_and_labels_as_xy_dict
 
-select = get_query_with_time_delta(100)
+select = get_query_with_time_delta(5)
 print select
 hour_before = datetime.datetime.now().replace(microsecond=0) -datetime.timedelta(hours=4)
 conn = sqlite3.connect('../lancontrol.db')
@@ -21,6 +21,12 @@ print s4
 print dt
 
 get_series_and_labels_as_xy_dict(entries)
+s1, s2, s3, s4, dt = get_series_and_labels_as_xy_dict(entries)
+print s1
+print s2
+print s3
+print s4
+print dt
 
 # d = {}
 # data  = [ ]

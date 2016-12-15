@@ -93,7 +93,7 @@ def bd_save_external_data():
 @app.route('/chartist')
 def chartist_view():
     db = get_db()
-    select = get_query_with_time_delta(150)
+    select = get_query_with_time_delta(8)
     cur = db.execute(select)
     entries = cur.fetchall()
     s1, s2, s3, s4, td = get_series_and_labels(entries)
@@ -103,10 +103,21 @@ def chartist_view():
 @app.route('/d3nv')
 def d3nv_view():
     db = get_db()
-    select = get_query_with_time_delta(100)
+    select = get_query_with_time_delta(8)
     cur = db.execute(select)
     entries = cur.fetchall()
     s1, s2, s3, s4 = get_series_and_labels_as_xy_dict(entries)
     return render_template('d3nv-chart.html', s1=s1, s2=s2, s3=s3, s4=s4)
+
+
+
+@app.route('/d3nv2')
+def d3nv_view2():
+    db = get_db()
+    select = get_query_with_time_delta(100)
+    cur = db.execute(select)
+    entries = cur.fetchall()
+    s1, s2, s3, s4, dt = get_series_and_labels_as_xy_dict(entries)
+    return render_template('d3nv-chart2.html', s1=s1, s2=s2, s3=s3, s4=s4, dt=dt)
 
 
