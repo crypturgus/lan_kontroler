@@ -12,7 +12,7 @@ from flask import (
     flash,
 )
 
-from utils.helpers import get_series_and_labels, get_query_with_time_delta
+from utils.helpers import get_series_and_labels, get_query_with_time_delta, get_series_and_labels_as_xy_dict
 
 # create our little application :)
 app = Flask(__name__)
@@ -93,7 +93,7 @@ def bd_save_external_data():
 @app.route('/chartist')
 def chartist_view():
     db = get_db()
-    select = get_query_with_time_delta(10)
+    select = get_query_with_time_delta(150)
     cur = db.execute(select)
     entries = cur.fetchall()
     s1, s2, s3, s4, td = get_series_and_labels(entries)
@@ -103,10 +103,10 @@ def chartist_view():
 @app.route('/d3nv')
 def d3nv_view():
     db = get_db()
-    select = get_query_with_time_delta(10)
+    select = get_query_with_time_delta(100)
     cur = db.execute(select)
     entries = cur.fetchall()
-    s1, s2, s3, s4, td = get_series_and_labels(entries)
-    return render_template('d3nv-chart.html', s1=s1, s2=s2, s3=s3, s4=s4, dt=td)
+    s1, s2, s3, s4 = get_series_and_labels_as_xy_dict(entries)
+    return render_template('d3nv-chart.html', s1=s1, s2=s2, s3=s3, s4=s4)
 
 

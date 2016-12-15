@@ -52,7 +52,6 @@
 </div>
 
 <script>
-    var dt = {{ dt|safe }}
     var s1 = {{ s1|safe }}
     var s2 = {{ s2|safe }}
     var s3 = {{ s3|safe }}
@@ -66,22 +65,34 @@ nv.addGraph(function() {
         var zoom = 1;
 
         chart.useInteractiveGuideline(true);
+
+        var days = ["Monday", "Tuesday", "Wednesday", "Thursday"];
         chart.xAxis
-            .tickFormat(d3.format(',r'));
+            .tickValues([0, 1, 2, 3, 4])
+            .tickFormat(function(d){
+            return days[d]
+        });
+
+
+
+
+
+        <!--chart.xAxis-->
+            <!--.tickFormat(d3.format(',r'));-->
 
         chart.lines.dispatch.on("elementClick", function(evt) {
             console.log(evt);
         });
 
-        chart.yAxis
-            .axisLabel('Voltage (v)')
-            .tickFormat(d3.format(',.2f'));
+        <!--chart.yAxis-->
+            <!--.axisLabel('Voltage (v)')-->
+            <!--.tickFormat(d3.format(',.2f'));-->
 
         d3.select('#chart2 svg')
             .attr('perserveAspectRatio', 'xMinYMid')
             .attr('width', width)
             .attr('height', height)
-            .datum(sinAndCos2());
+            .datum(getData());
 
         setChartViewBox();
         resizeChart();
@@ -140,19 +151,24 @@ nv.addGraph(function() {
         return chart;
     });
 
-    function sinAndCos2() {
+    function getData() {
 
         return [
             {
-                values: [{x: 1, y:0}, {x: 2, y: 11}, {x: 3, y:7}],
+                <!--values: [{'y': 19, 'x': u'2016-12-15 09:15:46'}, {'y': 19, 'x': u'2016-12-15 09:18:46'}, {'y': 19, 'x': u'2016-12-15 09:21:47'}],-->
+                values: [{'x': '0', 'y':'1'}, {'x': '1', 'y': '0'}, {'x': '2', 'y':'3'}, {'x': '3', 'y':'2'}],
+
+                <!--values: [{'x': 'kot', 'y':'1'}, {'x': 'pies', 'y': '0'}, {'x': 'mrowka', 'y':'3'}, {'x': 'wielblad', 'y':'2'}],-->
+
+                <!--values = s1,-->
                 key: "Sine Wave",
                 color: "#ff7f0e"
             },
-            {
-             values: [{x: 1, y:2}, {x: 2, y: 7}, {x: 3, y: 11}],
-                key: "Cosine Wave",
-                color: "#2ca02c"
-            }
+            <!--{-->
+             <!--values: [{x: 1, y:2}, {x: 2, y: 7}, {x: 3, y: 11}],-->
+                <!--key: "Cosine Wave",-->
+                <!--color: "#2ca02c"-->
+            <!--}-->
         ];
     }
 
