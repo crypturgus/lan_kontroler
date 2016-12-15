@@ -1,0 +1,53 @@
+/db?ia14=#24&ia15=#25&ia7=#18&ia8=#19
+
+INP6 Inp6	14.2 °C		#define INP6 (17) <ia7>142</ia7>
+
+INP7 Inp7	N/A °C          #define INP7 (18) <ia8>-600</ia8>
+
+
+
+Inp6	14.2	°C		
+Inp7	N/A	°C
+#define INP6 (17) // iso.3.6.1.4.1.17095.5.1.0: READONLY ASCII_STRING.
+#define INP7 (18) // iso.3.6.1.4.1.17095.5.2.0: READONLY ASCII_STRING.
+<response>
+<out0>1</out0>
+<out1>1</out1>
+<out2>1</out2>
+<out3>1</out3>
+<out4>1</out4>
+<out5>1</out5>
+<out6>1</out6>
+<di0>up</di0>
+<di1>up</di1>
+<di2>up</di2>
+<di3>up</di3>
+<ia0>263</ia0>
+<ia1>124</ia1>
+<ia2>0</ia2>
+<ia3>3</ia3>
+<ia4>4326</ia4>
+<ia5>-97</ia5>
+<ia6>29</ia6>
+<ia7>142</ia7>
+<ia8>-600</ia8>
+<ia9>-600</ia9>
+<ia10>-600</ia10>
+<ia11>-600</ia11>
+<ia12>-600</ia12>
+<ia13>201</ia13>
+<ia14>615</ia14>
+<ia15>2813</ia15>
+<ia16>26572</ia16>
+<ia17>0</ia17>
+<ia18>0</ia18>
+<ia19>-59</ia19>
+<freq>5008</freq>
+<duty>500</duty>
+<pwm>0</pwm>
+<sec0>5</sec0>
+<sec1>40</sec1>
+<sec2>13</sec2>
+<sec3>0</sec3>
+<sec4>56405</sec4>
+</response>

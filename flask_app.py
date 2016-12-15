@@ -1,5 +1,4 @@
 import os
-
 import sqlite3
 from flask import (
     Flask,
@@ -12,6 +11,8 @@ from flask import (
     render_template,
     flash,
 )
+
+from utils.helpers import get_series_and_labels, get_query_with_time_delta
 
 # create our little application :)
 app = Flask(__name__)
@@ -67,9 +68,12 @@ def initdb_command():
 @app.route('/')
 def hello_world():
     db = get_db()
-    cur = db.execute('select ia7, ia8, ia14, ia15 from board  where ia14 is not null order by id desc')
+    select = get_query_with_time_delta(10)
+    cur = db.execute(select)
     entries = cur.fetchall()
-    return render_template('index.html', entries=entries)
+    s1, s2, s3, s4, td = get_series_and_labels(entries)
+
+    return render_template('index.html', s1=s1, s2=s2, s3=s3, s4=s4, dt=td)
 
 
 
