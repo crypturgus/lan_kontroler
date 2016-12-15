@@ -88,3 +88,25 @@ def bd_save_external_data():
                     request.args.get('ia15')])
         db.commit()
     return 'ok'
+
+
+@app.route('/chartist')
+def chartist_view():
+    db = get_db()
+    select = get_query_with_time_delta(10)
+    cur = db.execute(select)
+    entries = cur.fetchall()
+    s1, s2, s3, s4, td = get_series_and_labels(entries)
+    return render_template('chartist.html', s1=s1, s2=s2, s3=s3, s4=s4, dt=td)
+
+
+@app.route('/d3nv')
+def d3nv_view():
+    db = get_db()
+    select = get_query_with_time_delta(10)
+    cur = db.execute(select)
+    entries = cur.fetchall()
+    s1, s2, s3, s4, td = get_series_and_labels(entries)
+    return render_template('d3nv-chart.html', s1=s1, s2=s2, s3=s3, s4=s4, dt=td)
+
+

@@ -3,14 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <title>Lan Kontroler</title>
-    <script src="{{ url_for('static', filename='chartist.js') }} "></script>
-    <link rel="stylesheet"
-          href="{{ url_for('static', filename='chartist.min.css') }}">
+    <script src="{{ url_for('static', filename='js/chartist.js') }} "></script>
+    <script src="{{ url_for('static', filename='js/nv.d3.js') }} "></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.2/d3.min.js" charset="utf-8"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/chartist.min.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/nv.d3.css') }}">
 </head>
 <body>
 <div class=page>
+    <a href="{{ url_for('chartist_view') }}">chartist_view</a>
+    <a href="{{ url_for('d3nv_view') }}">d3nv_view</a>
  {% block body %}{% endblock %}
 </div>
-
 </body>
+{% block javascript %}{% endblock %}
 </html>
