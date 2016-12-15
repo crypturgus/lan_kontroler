@@ -42,5 +42,14 @@ def get_series_and_labels_as_xy_dict(entries):
         s4.append({'x': i, 'y': i4})
         lables.append(dt)
         i += 1
-    return json.dumps(s1), json.dumps(s2), json.dumps(s3), json.dumps(s4), json.dumps(lables)
+    means = (('SERIA1', mean(s1)),
+             ('SERIA2', mean(s2)),
+             ('SERIA3', mean(s3)),
+             ('SERIA4', mean(s4)),
+             )
+    return json.dumps(s1), json.dumps(s2), json.dumps(s3), json.dumps(s4), json.dumps(lables), means
 
+
+def mean(numbers):
+    val_list = [x['y'] for x in numbers if x['y'] ]
+    return round(float(sum(val_list)) / max(len(val_list), 1), 1)
