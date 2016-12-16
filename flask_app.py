@@ -77,8 +77,8 @@ def index():
 def bd_save_external_data():
     if request.method == 'GET':
         db = get_db()
-        ia8 = str(request.args.get('ia8')).strip()
-        if ia8 == '-60':
+        ia8 = int(request.args.get('ia8'))
+        if ia8 == -60:
             ia8 = None
         db.execute('insert into board (ia7, ia8, ia14, ia15) values (?, ?, ?, ?)',
                    [request.args.get('ia7'),
