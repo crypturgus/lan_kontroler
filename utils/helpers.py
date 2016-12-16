@@ -52,6 +52,6 @@ def get_series_and_labels_as_xy_dict(entries):
 
 def mean(numbers):
     if numbers:
-        val_list = [x['y'] for x in numbers if x['y'] ]
+        val_list = [x['y'] for x in numbers if x['y']]
         return round(float(sum(val_list)) / max(len(val_list), 1), 1)
     return 'None'
