@@ -119,3 +119,12 @@ def chart_base_view(delta_val=24, delta_type='h'):
     entries = cur.fetchall()
     s1, s2, s3, s4, dt, means = get_series_and_labels_as_xy_dict(entries)
     return render_template('d3nv-chart.html', s1=s1, s2=s2, s3=s3, s4=s4, dt=dt, limit=data_limit, means=means)
+
+
+@app.route('/redir', methods=['POST'])
+def redir_view():
+    if request.method == 'POST':
+        hours = request.form['hours']
+        if hours:
+            return redirect(url_for('chart_base_view') + '-{}h'.format(hours))
+        return redirect(url_for('index'))

@@ -35,7 +35,12 @@
   </div>
 </nav>
 <div class=page>
-    DANE Z OSTATNICH {{ limit }}h
+
+
+    <form id="setHoursForm" action="{{ url_for('redir_view') }}" method='post'>
+        <input type="number" name="hours">
+        <input type="submit" id="submitForm", value="OK">
+    </form>
 {% block body %}{% endblock %}
 </div>
 {% block javascript %}{% endblock %}
