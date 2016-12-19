@@ -17,36 +17,6 @@
       <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
 		<script src="{{ url_for('static', filename='js/bootstrap-filestyle.min.js') }}"></script>
 	<link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
-    <!--<link rel="stylesheet" href="{{ url_for('static', filename='css/jquery-ui-1.10.0.custom.css') }}" >-->
-    <!--<script src="{{ url_for('static', filename='js/jquery-1.8.3.min.js') }}"></script>-->
-    <!--<script src="{{ url_for('static', filename='js/jquery-ui-1.9.2.custom.min.js') }}"></script>-->
-    <!--<script src="{{ url_for('static', filename='js/bootstrap-filestyle.min.js') }}"></script>-->
-	<!--<link href="{{ url_for('static', filename='css/css.css') }}" rel="stylesheet">-->
-
-
-    <!--<link rel="stylesheet" href="{{ url_for('static', filename='css/nv.d3.css') }}">-->
-    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.2/d3.min.js" charset="utf-8"></script>-->
-    <!--<script src="{{ url_for('static', filename='js/nv.d3.js') }} "></script>-->
-
-    <!--<style>-->
-        <!--text {-->
-            <!--font: 12px sans-serif;-->
-        <!--}-->
-        <!--svg {-->
-            <!--display: block;-->
-        <!--}-->
-        <!--html, body, #chart1, svg {-->
-            <!--margin: 0px;-->
-            <!--padding: 0px;-->
-            <!--height: 100%;-->
-            <!--width: 100%;-->
-        <!--}-->
-        <!--#chartZoom {-->
-            <!--position: absolute;-->
-            <!--top: 0;-->
-            <!--left: 0;-->
-        <!--}-->
-    <!--</style>-->
 </head>
 <body>
 <nav class="navbar navbar-inverse">
@@ -57,9 +27,10 @@
     <ul class="nav navbar-nav">
         <li class="active"><a href="{{ url_for('index') }}">Home</a></li>
         <li><a href="{{ url_for('chartist_view') }}">chartist_view</a></li>
-        <li><a href="{{ url_for('d3nv_view_24h') }}">d3nv_24h</a></li>
-        <li><a href="{{ url_for('d3nv_view_week') }}">d3nv_week</a></li>
-        <li><a href="{{ url_for('d3nv_view_all') }}">d3nv_alldata</a></li>
+        <li><a href="{{ url_for('chart_base_view') + '-24h' }}">d3nv_24h</a></li>
+        <li><a href="{{ url_for('chart_base_view') + '-1weeks' }}">d3nv_1week</a></li>
+        <li><a href="{{ url_for('chart_base_view') + '-1years' }}">d3nv_1year</a></li>
+        <li><a href="{{ url_for('chart_base_view') }}">custom view</a></li>
     </ul>
   </div>
 </nav>

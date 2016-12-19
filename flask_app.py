@@ -1,4 +1,6 @@
 import os
+import re
+
 import sqlite3
 from flask import (
     Flask,
@@ -100,33 +102,20 @@ def chartist_view():
     return render_template('chartist.html', s1=s1, s2=s2, s3=s3, s4=s4, dt=td, limit=data_limit)
 
 
-@app.route('/d3nv-24h')
-def d3nv_view_24h():
-    data_limit = 24
+@app.route('/chart')
+@app.route('/chart-<int:delta_val><delta_type>')
+def chart_base_view(delta_val=24, delta_type='h'):
+    if delta_type == 'h':
+        data_limit = delta_val
+    elif delta_type == 'days':
+        data_limit = int(delta_val) * 24
+    elif delta_type == 'weeks':
+        data_limit = int(delta_val) * 24 * 7
+    elif delta_type == 'years':
+        data_limit = int(delta_val) * 24 * 7 * 365
     db = get_db()
     select = get_query_with_time_delta(data_limit)
     cur = db.execute(select)
     entries = cur.fetchall()
     s1, s2, s3, s4, dt, means = get_series_and_labels_as_xy_dict(entries)
     return render_template('d3nv-chart.html', s1=s1, s2=s2, s3=s3, s4=s4, dt=dt, limit=data_limit, means=means)
-
-@app.route('/d3nvalldata')
-def d3nv_view_all():
-    data_limit = 8760
-    db = get_db()
-    select = get_query_with_time_delta(data_limit)
-    cur = db.execute(select)
-    entries = cur.fetchall()
-    s1, s2, s3, s4, dt, means = get_series_and_labels_as_xy_dict(entries)
-    return render_template('d3nv-chart.html', s1=s1, s2=s2, s3=s3, s4=s4, dt=dt, limit=data_limit, means=means)
-
-@app.route('/d3nv-week')
-def d3nv_view_week():
-    data_limit = 24 * 7
-    db = get_db()
-    select = get_query_with_time_delta(data_limit)
-    cur = db.execute(select)
-    entries = cur.fetchall()
-    s1, s2, s3, s4, dt, means = get_series_and_labels_as_xy_dict(entries)
-    return render_template('d3nv-chart.html', s1=s1, s2=s2, s3=s3, s4=s4, dt=dt, limit=data_limit, means=means)
-
