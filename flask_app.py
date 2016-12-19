@@ -69,7 +69,7 @@ def initdb_command():
 
 @app.route('/')
 def index():
-    return render_template('index.html', limit=DATA_LIMIT)
+    return render_template('index.html', limit='??')
 
 
 
@@ -101,7 +101,7 @@ def chartist_view():
 
 
 @app.route('/d3nv-24h')
-def d3nv_view():
+def d3nv_view_24h():
     data_limit = 24
     db = get_db()
     select = get_query_with_time_delta(data_limit)
@@ -121,7 +121,7 @@ def d3nv_view_all():
     return render_template('d3nv-chart.html', s1=s1, s2=s2, s3=s3, s4=s4, dt=dt, limit=data_limit, means=means)
 
 @app.route('/d3nv-week')
-def d3nv_view_all():
+def d3nv_view_week():
     data_limit = 24 * 7
     db = get_db()
     select = get_query_with_time_delta(data_limit)
