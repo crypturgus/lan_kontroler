@@ -27,7 +27,7 @@ app.config.update(dict(
 ))
 app.config.from_envvar('FLASK_APP_SETTINGS', silent=True)
 # boardchart
-DATA_LIMIT = 24
+
 
 
 def connect_db():
@@ -91,21 +91,42 @@ def bd_save_external_data():
 
 @app.route('/chartist')
 def chartist_view():
+    data_limit = 24
     db = get_db()
-    select = get_query_with_time_delta(DATA_LIMIT)
+    select = get_query_with_time_delta(data_limit)
     cur = db.execute(select)
     entries = cur.fetchall()
-    s1, s2, s3, s4, td= get_series_and_labels(entries)
-    return render_template('chartist.html', s1=s1, s2=s2, s3=s3, s4=s4, dt=td, limit=DATA_LIMIT)
+    s1, s2, s3, s4, td = get_series_and_labels(entries)
+    return render_template('chartist.html', s1=s1, s2=s2, s3=s3, s4=s4, dt=td, limit=data_limit)
 
 
-@app.route('/d3nv')
+@app.route('/d3nv-24h')
 def d3nv_view():
+    data_limit = 24
     db = get_db()
-    select = get_query_with_time_delta(DATA_LIMIT)
+    select = get_query_with_time_delta(data_limit)
     cur = db.execute(select)
     entries = cur.fetchall()
     s1, s2, s3, s4, dt, means = get_series_and_labels_as_xy_dict(entries)
-    return render_template('d3nv-chart.html', s1=s1, s2=s2, s3=s3, s4=s4, dt=dt, limit=DATA_LIMIT, means=means)
+    return render_template('d3nv-chart.html', s1=s1, s2=s2, s3=s3, s4=s4, dt=dt, limit=data_limit, means=means)
 
+@app.route('/d3nvalldata')
+def d3nv_view_all():
+    data_limit = 8760
+    db = get_db()
+    select = get_query_with_time_delta(data_limit)
+    cur = db.execute(select)
+    entries = cur.fetchall()
+    s1, s2, s3, s4, dt, means = get_series_and_labels_as_xy_dict(entries)
+    return render_template('d3nv-chart.html', s1=s1, s2=s2, s3=s3, s4=s4, dt=dt, limit=data_limit, means=means)
+
+@app.route('/d3nv-week')
+def d3nv_view_all():
+    data_limit = 24 * 7
+    db = get_db()
+    select = get_query_with_time_delta(data_limit)
+    cur = db.execute(select)
+    entries = cur.fetchall()
+    s1, s2, s3, s4, dt, means = get_series_and_labels_as_xy_dict(entries)
+    return render_template('d3nv-chart.html', s1=s1, s2=s2, s3=s3, s4=s4, dt=dt, limit=data_limit, means=means)
 

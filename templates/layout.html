@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="refresh" content="30" >
+    <meta http-equiv="refresh" content="200" >
     <title>Lan Kontroler</title>
 
     <script src="{{ url_for('static', filename='js/chartist.js') }} "></script>
@@ -55,9 +55,11 @@
       <a class="navbar-brand" href="{{ url_for('index') }}">ChartsProject</a>
     </div>
     <ul class="nav navbar-nav">
-      <li class="active"><a href="{{ url_for('index') }}">Home</a></li>
+        <li class="active"><a href="{{ url_for('index') }}">Home</a></li>
         <li><a href="{{ url_for('chartist_view') }}">chartist_view</a></li>
-    <li><a href="{{ url_for('d3nv_view') }}">d3nv_view</a></li>
+        <li><a href="{{ url_for('d3nv-24h') }}">d3nv_24h</a></li>
+        <li><a href="{{ url_for('d3nv-week') }}">d3nv_alldata</a></li>
+        <li><a href="{{ url_for('d3nvalldata') }}">d3nv_week</a></li>
     </ul>
   </div>
 </nav>
