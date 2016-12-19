@@ -27,16 +27,14 @@
     <ul class="nav navbar-nav">
         <li class="active"><a href="{{ url_for('index') }}">Home</a></li>
         <li><a href="{{ url_for('chartist_view') }}">chartist_view</a></li>
-        <li><a href="{{ url_for('chart_base_view') + '-24h' }}">d3nv_24h</a></li>
+        <li><a href="{{ url_for('chart_base_view') + '-12h' }}">d3nv_12h</a></li>
+        <li><a href="{{ url_for('chart_base_view') + '-1days' }}">d3nv_1d</a></li>
         <li><a href="{{ url_for('chart_base_view') + '-1weeks' }}">d3nv_1week</a></li>
         <li><a href="{{ url_for('chart_base_view') + '-1years' }}">d3nv_1year</a></li>
-        <li><a href="{{ url_for('chart_base_view') }}">custom view</a></li>
     </ul>
   </div>
 </nav>
 <div class=page>
-
-
     <form id="setHoursForm" action="{{ url_for('redir_view') }}" method='post'>
         <input type="number" name="hours">
         <input type="submit" id="submitForm", value="OK">
