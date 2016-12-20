@@ -71,7 +71,8 @@ def initdb_command():
 
 @app.route('/')
 def index():
-    return render_template('index.html', limit='??')
+    return redirect(url_for('chart_base_view')+'-1h-1-1-0-0')
+    # return render_template('index.html', limit='??')
 
 
 
@@ -153,5 +154,8 @@ def redir_view():
     if request.method == 'POST':
         hours = request.form['hours']
         if hours:
+            print 'przed print'
+            print request
+            print 'po print'
             return redirect(url_for('chart_base_view') + '-{}h'.format(hours))
         return redirect(url_for('index'))
