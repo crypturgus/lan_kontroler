@@ -34,13 +34,16 @@
     </ul>
   </div>
 </nav>
-<div class=page>
-    <form id="setHoursForm" action="{{ url_for('redir_view') }}" method='post'>
+<!--<div class=page>-->
+
+ <div class="col-md-4 text-center">
+     <form id="setHoursForm" action="{{ url_for('redir_view') }}" method='post'>
         <input type="number" name="hours">
         <input type="submit" id="submitForm", value="OK">
     </form>
-{% block body %}{% endblock %}
 </div>
+{% block body %}{% endblock %}
+<!--</div>-->
 {% block javascript %}{% endblock %}
 </body>
 
