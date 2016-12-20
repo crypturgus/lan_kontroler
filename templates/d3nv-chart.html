@@ -7,9 +7,6 @@
 </ul>
 <p>
 DANE Z OSTATNICH {{ limit }}h
-<div id="chartZoom">
-    <a href="#" id="zoomIn">Zoom In</a> <a href="#" id="zoomOut">Zoom Out</a>
-</div>
 </p>
 <div id="chart2" class='with-transitions'>
     <svg></svg>
@@ -22,25 +19,29 @@ DANE Z OSTATNICH {{ limit }}h
     var s3 = {{ s3|safe }};
     var s4 = {{ s4|safe }};
     var days = {{ dt|safe }};
-    var data = [
-            {
+    var data = []
+    if (s1.length > 1)
+    {
+    data.push({
             key: "SERIA1",
             values: s1
-            },
-            {
+        })
+    };
+    if (s2.length > 1){
+    data.push({
             key: "SERIA2",
             values: s2
-            },
-            {
+            })};
+    if (s3.length > 1){
+    data.push({
             key: "SERIA3",
             values: s3
-            },
-            {
+            })};
+    if (s4.length > 1){
+    data.push({
             key: "SERIA4",
             values: s4
-            }
-
-    ];
+            })};
 
     nv.addGraph(function() {
         var chart = nv.models.lineChart()
@@ -78,9 +79,6 @@ DANE Z OSTATNICH {{ limit }}h
 
         nv.utils.windowResize(resizeChart);
 
-        d3.select('#zoomIn').on('click', zoomIn);
-        d3.select('#zoomOut').on('click', zoomOut);
-
 
         function setChartViewBox() {
             var w = width * zoom,
@@ -96,16 +94,6 @@ DANE Z OSTATNICH {{ limit }}h
                 .call(chart);
         }
 
-        function zoomOut() {
-            zoom += .25;
-            setChartViewBox();
-        }
-
-        function zoomIn() {
-            if (zoom <= .5) return;
-            zoom -= .25;
-            setChartViewBox();
-        }
 
         // This resize simply sets the SVG's dimensions, without a need to recall the chart code
         // Resizing because of the viewbox and perserveAspectRatio settings
