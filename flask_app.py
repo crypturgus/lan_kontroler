@@ -121,6 +121,33 @@ def chart_base_view(delta_val=24, delta_type='h'):
     return render_template('d3nv-chart.html', s1=s1, s2=s2, s3=s3, s4=s4, dt=dt, limit=data_limit, means=means)
 
 
+# @app.route('/chart')
+@app.route('/chart-<int:delta_val><delta_type>-<int:seria1>-<int:seria2>-<int:seria3>-<int:seria4>')
+def chart_base_view_(delta_val=24, delta_type='h', seria1=None, seria2=None, seria3=None, seria4=None):
+    if delta_type == 'h':
+        data_limit = delta_val
+    elif delta_type == 'days':
+        data_limit = int(delta_val) * 24
+    elif delta_type == 'weeks':
+        data_limit = int(delta_val) * 24 * 7
+    elif delta_type == 'years':
+        data_limit = int(delta_val) * 24 * 7 * 365
+    db = get_db()
+    select = get_query_with_time_delta(data_limit)
+    cur = db.execute(select)
+    entries = cur.fetchall()
+    s1, s2, s3, s4, dt, means = get_series_and_labels_as_xy_dict(entries)
+    if not seria1:
+        s1 = []
+    if not seria2:
+        s2 = []
+    if not seria3:
+        s3= []
+    if not seria4:
+        s4 = []
+    return render_template('d3nv-chart.html', s1=s1, s2=s2, s3=s3, s4=s4, dt=dt, limit=data_limit, means=means)
+
+
 @app.route('/redir', methods=['POST'])
 def redir_view():
     if request.method == 'POST':
