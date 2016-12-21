@@ -14,7 +14,12 @@ from flask import (
     flash,
 )
 
-from utils.helpers import get_series_and_labels, get_query_with_time_delta, get_series_and_labels_as_xy_dict
+from utils.helpers import (
+    get_series_and_labels,
+    get_query_with_time_delta,
+    get_series_and_labels_as_xy_dict,
+    interval_type_to_hours,
+)
 
 # create our little application :)
 app = Flask(__name__)
@@ -103,8 +108,8 @@ def chartist_view():
     return render_template('chartist.html', s1=s1, s2=s2, s3=s3, s4=s4, dt=td, limit=data_limit)
 
 
-@app.route('/chart')
-@app.route('/chart-<int:delta_val><delta_type>')
+@app.route('/charto')
+@app.route('/charto-<int:delta_val><delta_type>')
 def chart_base_view(delta_val=24, delta_type='h'):
     if delta_type == 'h':
         data_limit = delta_val
@@ -123,7 +128,7 @@ def chart_base_view(delta_val=24, delta_type='h'):
 
 
 # @app.route('/chart')
-@app.route('/chart-<int:delta_val><delta_type>-<int:seria1>-<int:seria2>-<int:seria3>-<int:seria4>')
+@app.route('/charto-<int:delta_val><delta_type>-<int:seria1>-<int:seria2>-<int:seria3>-<int:seria4>')
 def chart_base_view_(delta_val=24, delta_type='h', seria1=None, seria2=None, seria3=None, seria4=None):
     if delta_type == 'h':
         data_limit = delta_val
@@ -157,3 +162,48 @@ def redir_view():
         if hours:
             return redirect(url_for('chart_base_view') + '-{}h'.format(hours))
         return redirect(url_for('index'))
+
+# time_delta=12&interval=hours&series1=on&series2=on&series3=on&series4=on
+@app.route('/chart', methods=['GET'])
+def get_view():
+    if request.method == 'GET':
+        time_delta = request.args.get('time_delta')
+        if not time_delta:
+            time_delta = 12
+        interval_type = request.args.get('interval_type')
+        if not interval_type:
+            interval_type = 'hours'
+        time_delta_hours = interval_type_to_hours(interval_type, time_delta)
+        seria1 = request.args.get('series1')
+        seria2 = request.args.get('series2')
+        seria3 = request.args.get('series3')
+        seria4 = request.args.get('series4')
+        db = get_db()
+        select = get_query_with_time_delta(time_delta_hours)
+        cur = db.execute(select)
+        entries = cur.fetchall()
+        s1, s2, s3, s4, dt, means = get_series_and_labels_as_xy_dict(entries)
+        if not request.query_string:
+            return render_template("chart.html", s1=s1, s2=s2, s3=s3, s4=s4, dt=dt, limit=time_delta_hours, means=means)
+        if not seria1:
+            s1 = []
+        if not seria2:
+            s2 = []
+        if not seria3:
+            s3 = []
+        if not seria4:
+            s4 = []
+        print dt
+        print 'sss'
+        print 'sss'
+        print s1
+        print 'sss'
+        print s2
+        print 'sss'
+        print s3
+        print 'sss'
+        print s4
+        print "dupa"
+        print request.query_string
+        return render_template("chart.html", s1=s1, s2=s2, s3=s3, s4=s4, dt=dt, limit=time_delta_hours, means=means)
+

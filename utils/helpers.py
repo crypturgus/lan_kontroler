@@ -85,6 +85,18 @@ def get_correct_dt(dt):
              .strftime("%Y-%m-%d %H:%M:%S")\
             for x in dt]
 
+
+def interval_type_to_hours(interval_type, interval_val):
+    finall_val = int(interval_val)
+    if interval_type == 'hours':
+        return finall_val
+    elif interval_type == 'days':
+        return finall_val * 24
+    elif interval_type == 'weeks':
+        return finall_val * 24 * 7
+    elif interval_type == 'all':
+        return finall_val * 24 * 12000
+
 def prepare_request(request):
     out0 = request.args.get('out0')
     out1 = request.args.get('out1')

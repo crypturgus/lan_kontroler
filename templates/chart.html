@@ -1,0 +1,154 @@
+{% extends "layout.html" %}
+{% block body %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-2 text-center">
+            <p align="center">DANE Z OSTATNICH: {{ limit }}h</p>
+            {{ query_string }}
+            <form id="setHoursForm" action="{{ url_for('get_view') }}" method='get'  style="margin-bottom: 10px;">
+                Delta:<input type="number" name="time_delta" value="12"><br>
+                <input type="radio" name="interval_type" value="hours" checked> hours
+                <input type="radio" name="interval_type" value="days"> days
+                <input type="radio" name="interval_type" value="weeks"> weeks
+                <input type="radio" name="interval_type" value="all"> all
+                <br>
+                <input type="checkbox" name="series1" checked> Seria1
+                <input type="checkbox" name="series2" checked> Seria2
+                <input type="checkbox" name="series3" checked> Seria3
+                <input type="checkbox" name="series4" checked> Seria4
+                <br>
+                <input type="submit" value="Submit">
+            </form>
+            <div class="col-md-2 text-center">
+                <table class="table text-center">
+                    <tr>
+                        <th>series</th><th>average</th>
+                    </tr>
+                    {% for sname, val in means %}
+                    <tr>
+                        <td>{{ sname }}</td><td>{{ val }}</td>
+                        {% endfor %}
+                    </tr>
+                </table>
+            </div></div>
+        <div class="col-md-9 text-center">
+            <div id="chart2" class='with-transitions'>
+                <svg></svg>
+            </div>
+        </div></div>
+</div>
+
+{% endblock %}
+{% block javascript %}
+<script>
+    var s1 = {{ s1|safe }};
+    var s2 = {{ s2|safe }};
+    var s3 = {{ s3|safe }};
+    var s4 = {{ s4|safe }};
+    var days = {{ dt|safe }};
+    var data = []
+    if (s1.length > 1)
+    {
+    data.push({
+            key: "SERIA1",
+            values: s1
+        })
+    };
+    if (s2.length > 1){
+    data.push({
+            key: "SERIA2",
+            values: s2
+            })};
+    if (s3.length > 1){
+    data.push({
+            key: "SERIA3",
+            values: s3
+            })};
+    if (s4.length > 1){
+    data.push({
+            key: "SERIA4",
+            values: s4
+            })};
+
+    nv.addGraph(function() {
+        var chart = nv.models.lineChart()
+            .color(d3.scale.category10().range())
+            .margin({top: 30, right: 60, bottom: 50, left: 70});
+        var fitScreen = false;
+        var width = 500;
+        var height = 300;
+        var zoom = 1;
+
+        chart.useInteractiveGuideline(true);
+
+        chart.xAxis
+            .tickFormat(function(d){
+            return days[d]
+        });
+
+        chart.yAxis     //Chart y-axis settings
+            .tickFormat(d3.format('.02f'));
+
+        chart.lines.dispatch.on("elementClick", function(evt) {
+            console.log(evt);
+        });
+
+
+        <!--d3.select('#chart2 svg')-->
+            <!--.attr('perserveAspectRatio', 'xMinYMid')-->
+            <!--.attr('width', width)-->
+            <!--.attr('height', height)-->
+            <!--.datum(data);-->
+         d3.select('#chart2 svg')
+            .attr('perserveAspectRatio', 'xMinYMid')
+            .datum(data);
+
+
+        setChartViewBox();
+        resizeChart();
+
+        nv.utils.windowResize(resizeChart);
+
+
+        function setChartViewBox() {
+            var w = width * zoom,
+                h = height * zoom;
+
+            chart
+                .width(w)
+                .height(h);
+
+            d3.select('#chart2 svg')
+                .attr('viewBox', '0 0 ' + w + ' ' + h)
+                .transition().duration(500)
+                .call(chart);
+        }
+
+
+        // This resize simply sets the SVG's dimensions, without a need to recall the chart code
+        // Resizing because of the viewbox and perserveAspectRatio settings
+        // This scales the interior of the chart unlike the above
+        function resizeChart() {
+            var container = d3.select('#chart2');
+            var svg = container.select('svg');
+
+            if (fitScreen) {
+                // resize based on container's width AND HEIGHT
+                var windowSize = nv.utils.windowSize();
+                svg.attr("width", windowSize.width);
+                svg.attr("height", windowSize.height);
+            } else {
+                // resize based on container's width
+                var aspect = chart.width() / chart.height();
+                var targetWidth = parseInt(container.style('width'));
+                svg.attr("width", targetWidth);
+                svg.attr("height", Math.round(targetWidth / aspect));
+            }
+        }
+        return chart;
+    });
+
+
+
+</script>
+{% endblock %}
