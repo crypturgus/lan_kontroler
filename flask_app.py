@@ -76,7 +76,7 @@ def initdb_command():
 
 @app.route('/')
 def index():
-    return redirect(url_for('chart_base_view')+'-1h-1-1-0-0')
+    return redirect(url_for('get_view')+'-1h-1-1-0-0')
     # return render_template('index.html', limit='??')
 
 
