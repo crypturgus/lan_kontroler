@@ -35,26 +35,55 @@ def get_series_and_labels_as_xy_dict(entries):
     lables = []
     i = 0
     for i1, i2, i3, i4, dt in entries:
-        print i1, i2, i3, i4, dt
         s1.append({'x': i, 'y': i1})
         s2.append({'x': i, 'y': i2})
         s3.append({'x': i, 'y': i3})
         s4.append({'x': i, 'y': i4})
         lables.append(dt)
         i += 1
-    means = (('SERIA1', mean(s1)),
-             ('SERIA2', mean(s2)),
-             ('SERIA3', mean(s3)),
-             ('SERIA4', mean(s4)),
-             )
-    return json.dumps(s1), json.dumps(s2), json.dumps(s3), json.dumps(s4), json.dumps(lables), means
+    averages = (('SERIA1', series_average(s1)),
+                ('SERIA2', series_average(s2)),
+                ('SERIA3', series_average(s3)),
+                ('SERIA4', series_average(s4)),
+                )
+    lables = get_correct_dt(lables)
+    return json.dumps(s1), json.dumps(s2), json.dumps(s3), json.dumps(s4), json.dumps(lables), averages
 
 
-def mean(numbers):
+def series_average(numbers):
     if numbers:
         val_list = [x['y'] for x in numbers if x['y']]
         return round(float(sum(val_list)) / max(len(val_list), 1), 1)
     return 'None'
+
+
+def get_stats(series):
+    cleared_series = clear_series(series)
+    s_max = max(cleared_series)
+    s_min = min(cleared_series)
+    max_min_diff = s_max - s_min
+    stop_start_diff = cleared_series[-1] - cleared_series[0]
+    stats_dict = dict(
+        min=s_min,
+        max=s_max,
+        max_min_diff=max_min_diff,
+        stop_start_diff=stop_start_diff
+    )
+    return stats_dict
+
+
+def clear_series(series):
+    '''
+    :param series:
+    :return: series without None values
+    '''
+    return [x for x in series if x is not None]
+
+
+def get_correct_dt(dt):
+    return [(datetime.datetime.strptime(x, '%Y-%m-%d %H:%M:%S') + datetime.timedelta(hours=1))\
+             .strftime("%Y-%m-%d %H:%M:%S")\
+            for x in dt]
 
 def prepare_request(request):
     out0 = request.args.get('out0')

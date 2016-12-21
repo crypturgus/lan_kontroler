@@ -146,6 +146,7 @@ def chart_base_view_(delta_val=24, delta_type='h', seria1=None, seria2=None, ser
         s3= []
     if not seria4:
         s4 = []
+    print dt
     return render_template('d3nv-chart.html', s1=s1, s2=s2, s3=s3, s4=s4, dt=dt, limit=data_limit, means=means)
 
 
@@ -154,8 +155,5 @@ def redir_view():
     if request.method == 'POST':
         hours = request.form['hours']
         if hours:
-            print 'przed print'
-            print request
-            print 'po print'
             return redirect(url_for('chart_base_view') + '-{}h'.format(hours))
         return redirect(url_for('index'))
