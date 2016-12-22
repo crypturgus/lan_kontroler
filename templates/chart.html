@@ -32,7 +32,7 @@
                 </table>
             </div></div>
         <div class="col-md-9 text-center">
-            <div id="chart2" class='with-transitions'>
+            <div id="chart1" class='with-transitions'>
                 <svg></svg>
             </div>
         </div></div>
@@ -40,7 +40,7 @@
 
 {% endblock %}
 {% block javascript %}
-<script>
+<script type="text/javascript">
     var s1 = {{ s1|safe }};
     var s2 = {{ s2|safe }};
     var s3 = {{ s3|safe }};
@@ -70,7 +70,28 @@
             values: s4
             })};
 
-    nv.addGraph(function() {
+      function get_min_and_max(s1, s2, s3, s4){
+        var merged_array = [];
+        merged_array.push.apply(merged_array, s1);
+        merged_array.push.apply(merged_array, s2);
+        merged_array.push.apply(merged_array, s3);
+        merged_array.push.apply(merged_array, s4);
+        var y_value_list = []
+        for (ob in merged_array) {
+            y_value_list.push(merged_array[ob]['y']);
+            };
+
+        var min_val = Math.min.apply(null, y_value_list);
+        var max_val = Math.max.apply(null, y_value_list);
+        var limit_values = {"min_val": min_val,
+                            "max_val": max_val
+                            };
+        return limit_values
+      };
+      var min_max = get_min_and_max(s1, s2, s3, s4);
+
+
+        nv.addGraph(function() {
         var chart = nv.models.lineChart()
             .color(d3.scale.category10().range())
             .margin({top: 30, right: 60, bottom: 50, left: 70});
@@ -93,13 +114,14 @@
             console.log(evt);
         });
 
+        var min_ = min_max['min_val'];
+        var max_ = min_max['max_val'];
+        var diff = (max_ - min_) * 0.10;
+        diff = 2
+        chart.forceY([min_-diff, max_+diff]);
 
-        <!--d3.select('#chart2 svg')-->
-            <!--.attr('perserveAspectRatio', 'xMinYMid')-->
-            <!--.attr('width', width)-->
-            <!--.attr('height', height)-->
-            <!--.datum(data);-->
-         d3.select('#chart2 svg')
+
+         d3.select('#chart1 svg')
             .attr('perserveAspectRatio', 'xMinYMid')
             .datum(data);
 
@@ -118,7 +140,7 @@
                 .width(w)
                 .height(h);
 
-            d3.select('#chart2 svg')
+            d3.select('#chart1 svg')
                 .attr('viewBox', '0 0 ' + w + ' ' + h)
                 .transition().duration(500)
                 .call(chart);
@@ -129,7 +151,7 @@
         // Resizing because of the viewbox and perserveAspectRatio settings
         // This scales the interior of the chart unlike the above
         function resizeChart() {
-            var container = d3.select('#chart2');
+            var container = d3.select('#chart1');
             var svg = container.select('svg');
 
             if (fitScreen) {
