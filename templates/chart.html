@@ -7,7 +7,7 @@
             <p align="center">DANE Z OSTATNICH: {{ limit }}h</p>
             {{ query_string }}
             <form id="setHoursForm" action="{{ url_for('get_view') }}" method='get'  style="margin-bottom: 10px;" name="dupadupa">
-                Delta:<input type="number" name="time_delta" value="12"><br>
+                Delta:<input type="number" name="time_delta" id="time_delta"><br>
                 <input type="radio" name="interval_type" value="hours" checked> hours
                 <input type="radio" name="interval_type" value="days"> days
                 <input type="radio" name="interval_type" value="weeks"> weeks
@@ -43,6 +43,7 @@
 {% block javascript %}
 <script type="text/javascript">
     var checkboxes = document.getElementById("setHoursForm");
+    document.getElementById("time_delta").value = {{ limit|safe }};
     var req_series_bool = {{ request_series|safe }};
     var si = 0;
     for (var i=0; i<checkboxes.length; i++)  {
