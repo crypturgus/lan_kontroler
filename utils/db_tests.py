@@ -72,3 +72,8 @@ print get_temp_factor(td_str, s1)
 # ia14 = [x['ia14'] for x in data]
 # ia15 = [x['ia15'] for x in data]
 # dt = [x['dt'] for x in data]
+
+
+l = [1, 2, 0, 1, 12, 99, 0]
+
+print [True if s else False for s in l]
