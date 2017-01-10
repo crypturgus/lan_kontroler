@@ -13,10 +13,10 @@
                 <input type="radio" name="interval_type" value="weeks"> weeks
                 <input type="radio" name="interval_type" value="all"> all
                 <br>
-                <input type="checkbox" name="series1" checked> Seria1
-                <input type="checkbox" name="series2" checked> Seria2
-                <input type="checkbox" name="series3" checked> Seria3
-                <input type="checkbox" name="series4" checked> Seria4
+                <input type="checkbox" name="series1" checked> KORYTARZ
+                <input type="checkbox" name="series2" checked> ZEWNETRZE
+                <input type="checkbox" name="series3" checked> PODWYZSZENIE
+                <input type="checkbox" name="series4" checked> WILGOTNOSC
                 <br>
                 <input type="submit" value="Submit">
             </form>
@@ -61,23 +61,23 @@
     if (s1.length > 1)
     {
     data.push({
-            key: "SERIA1",
+            key: "KORYTARZ",
             values: s1
         })
     };
     if (s2.length > 1){
     data.push({
-            key: "SERIA2",
+            key: "ZEWNETRZE",
             values: s2
             })};
     if (s3.length > 1){
     data.push({
-            key: "SERIA3",
+            key: "PODWYZSZENIE",
             values: s3
             })};
     if (s4.length > 1){
     data.push({
-            key: "SERIA4",
+            key: "WILGOTNOSC",
             values: s4
             })};
 
