@@ -200,3 +200,40 @@ def get_view():
         return render_template("chart.html",
                s1=s1, s2=s2, s3=s3, s4=s4, dt=dt, limit=time_delta_hours, means=means, request_series=request_series)
 
+
+
+@app.route('/chart-cumulative', methods=['GET'])
+def get_cumulative_view():
+    if request.method == 'GET':
+        time_delta = request.args.get('time_delta')
+        if not time_delta:
+            time_delta = 12
+        interval_type = request.args.get('interval_type')
+        if not interval_type:
+            interval_type = 'hours'
+        time_delta_hours = interval_type_to_hours(interval_type, time_delta)
+        seria1 = request.args.get('series1')
+        seria2 = request.args.get('series2')
+        seria3 = request.args.get('series3')
+        seria4 = request.args.get('series4')
+        db = get_db()
+        select = get_query_with_time_delta(time_delta_hours)
+        cur = db.execute(select)
+        entries = cur.fetchall()
+        s1, s2, s3, s4, dt, means = get_series_and_labels_as_xy_dict(entries)
+        if not request.query_string:
+            request_series = [1] * 4
+            return render_template("chart_cl.html",
+                   s1=s1, s2=s2, s3=s3, s4=s4, dt=dt, limit=time_delta_hours, means=means, request_series=request_series)
+        if not seria1:
+            s1 = []
+        if not seria2:
+            s2 = []
+        if not seria3:
+            s3 = []
+        if not seria4:
+            s4 = []
+        request_series_raw = [seria1, seria2, seria3, seria4]
+        request_series = [1 if s else 0 for s in request_series_raw]
+        return render_template("chart_cl.html",
+               s1=s1, s2=s2, s3=s3, s4=s4, dt=dt, limit=time_delta_hours, means=means, request_series=request_series)
