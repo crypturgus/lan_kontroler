@@ -143,5 +143,14 @@ def prepare_request(request):
     normalized_data = [d if d != '-60.0' else None for d in request_args]
     return normalized_data
 
+def get_reduce_indexes(data, max_len=480):
 
+    len_data = len(data)
+    factor = len_data / int(max_len)
+    print factor
+    red_list = [x for x in range(len_data) if x % factor == 0]
+    if red_list[-1] != len_data - 1:
+        red_list.append(len_data -1)
+        print data[len_data - 1]
+    return red_list
     
