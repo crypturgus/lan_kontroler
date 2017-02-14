@@ -41,10 +41,10 @@ def get_series_and_labels_as_xy_dict(entries):
         s4.append({'x': i, 'y': i4})
         lables.append(dt)
         i += 1
-    averages = (('SERIA1', series_average(s1)),
-                ('SERIA2', series_average(s2)),
-                ('SERIA3', series_average(s3)),
-                ('SERIA4', series_average(s4)),
+    averages = (('KORYTARZ', series_average(s1)),
+                ('ZEWNETRZE', series_average(s2)),
+                ('PODWYZSZENIE', series_average(s3)),
+                ('WILGOTNOSC', series_average(s4)),
                 )
     lables = get_correct_dt(lables)
     return json.dumps(s1), json.dumps(s2), json.dumps(s3), json.dumps(s4), json.dumps(lables), averages
@@ -143,14 +143,12 @@ def prepare_request(request):
     normalized_data = [d if d != '-60.0' else None for d in request_args]
     return normalized_data
 
-def get_reduce_indexes(data, max_len=480):
+def get_reduce_indexes(len_data, max_len=480):
 
-    len_data = len(data)
     factor = len_data / int(max_len)
     print factor
     red_list = [x for x in range(len_data) if x % factor == 0]
     if red_list[-1] != len_data - 1:
         red_list.append(len_data -1)
-        print data[len_data - 1]
     return red_list
     
