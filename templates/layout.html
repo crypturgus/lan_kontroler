@@ -26,13 +26,13 @@
     </div>
     <ul class="nav navbar-nav">
         <li class="active"><a href="{{ url_for('index') }}">Home</a></li>
-        <li><a href="{{ url_for('chart_base_view') + '-1h-1-1-0-0' }}">-1h S1&S2</a></li>
-        <li><a href="{{ url_for('chart_base_view') + '-12h-1-1-0-0' }}">-12h S1&S2</a></li>
-        <li><a href="{{ url_for('chart_base_view') + '-12h-1-0-0-0' }}">-12h S1</a></li>
-        <li><a href="{{ url_for('chart_base_view') + '-12h' }}">d3nv_12h</a></li>
-        <li><a href="{{ url_for('chart_base_view') + '-1days' }}">d3nv_1d</a></li>
-        <li><a href="{{ url_for('chart_base_view') + '-1weeks' }}">d3nv_1week</a></li>
-        <li><a href="{{ url_for('chart_base_view') + '-1years' }}">d3nv_1year</a></li>
+        <li><a href="{{ url_for('get_view') + '?time_delta=1&interval_type=hours&series1=on&series2=on' }}">-1h S1&S2</a></li>
+        <li><a href="{{ url_for('get_view') + '?time_delta=12&interval_type=hours&series1=on&series2=on' }}">-12h S1&S2</a></li>
+        <li><a href="{{ url_for('get_view') + '?time_delta=12&interval_type=hours&series1=on' }}">-12h S1</a></li>
+        <li><a href="{{ url_for('get_view') + '?time_delta=12&interval_type=hours&series1=on&series2=on&series3=on&series4=on' }}">-12h</a></li>
+        <li><a href="{{ url_for('get_view') + '?time_delta=1&interval_type=days&series1=on&series2=on&series3=on&series4=on' }}">1d</a></li>
+        <li><a href="{{ url_for('get_view') + '?time_delta=1&interval_type=weeks&series1=on&series2=on&series3=on&series4=on' }}">1week</a></li>
+        <li><a href="{{ url_for('get_view') + '?time_delta=5110&interval_type=hours&series1=on&series2=on&series3=on&series4=on' }}">1year</a></li>
     </ul>
   </div>
 </nav>
