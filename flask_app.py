@@ -144,7 +144,7 @@ def chart_base_view_(delta_val=24, delta_type='h', seria1=None, seria2=None, ser
     cur = db.execute(select)
     entries = cur.fetchall()
     s1, s2, s3, s4, dt, means = get_series_and_labels_as_xy_dict(entries)
-    if 480 >= len(s1):
+    if len(s1) >= 480:
         reduced_indexes = get_reduce_indexes(s1)
         tmp_s1 = s1[:]
         tmp_s2 = s2[:]
