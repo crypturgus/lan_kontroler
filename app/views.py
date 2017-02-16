@@ -9,7 +9,7 @@ from flask import (
     url_for,
     render_template,
 )
-
+from .models import Board
 from utils.helpers import (
     get_reduce_indexes,
     get_series_and_labels,
@@ -73,8 +73,18 @@ def initdb_command():
 
 @app.route('/')
 def index():
-    return redirect(url_for('get_view'))
-    # return render_template('index.html', limit='??')
+    # return redirect(url_for('get_view'))
+    # select ia7, ia8, ia14, ia15, dt from board  where ia14 is not null and dt > "{}" order by dt ASC'
+    # sensor = Board.query.filter(Board.ia7, Board.ia8, Board.ia14, Board.ia15, Board.dt).all()
+    sensor = Board.query.filter(Board.ia7, Board.ia8, Board.ia14, Board.ia15, Board.dt).limit(12).all()
+    l = []
+    for row in sensor:
+        l.append(row.id)
+        l.append(row.id)
+        l.append(row.id)
+        l.append(row.id)
+        l.append(row.id)
+    return render_template('test_views.html', dupa=l)
 
 
 @app.route('/db', methods=['GET'])
