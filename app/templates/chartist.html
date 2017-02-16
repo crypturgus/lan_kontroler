@@ -1,0 +1,27 @@
+{% extends "layout.html" %}
+{% block body %}
+
+<div class="ct-chart ct-golden-section" id="chart2"></div>
+{% endblock %}
+{% block javascript %}
+
+<script>
+    var dt = {{ dt|safe }}
+    var s1 = {{ s1|safe }}
+    var s2 = {{ s2|safe }}
+    var s3 = {{ s3|safe }}
+    var s4 = {{ s4|safe }}
+    new Chartist.Line('#chart1', {
+    labels: [1, 2, 3, 4],
+    series: [[100, 120, 180, 200]]
+  });
+  new Chartist.Line('#chart2', {
+    labels: dt,
+    series: [
+        s1,
+        s2,
+        s3,
+        s4]
+  });
+</script>
+{% endblock %}
