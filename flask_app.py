@@ -12,11 +12,12 @@ from flask import (
 
 from utils.helpers import (
     get_reduce_indexes,
-    get_series_and_labels,
     get_query_with_time_delta,
     get_series_and_labels_as_xy_dict,
     interval_type_to_hours,
+
 )
+from utils.db import db
 
 
 # create our little application :)
