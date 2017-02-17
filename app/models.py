@@ -48,3 +48,13 @@ class Board(db.Model):
     sec3 = db.Column(db.Integer)
     sec4 = db.Column(db.Integer)
     dt = db.Column(db.DateTime)
+
+
+class User(db.Model):
+    __tablename__ = 'user'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(64))
+    des = db.Column(db.String(120))
+
+    def __repr__(self):
+        return '<User %r>' % (self.name)

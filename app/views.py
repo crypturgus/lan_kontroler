@@ -9,7 +9,7 @@ from flask import (
     url_for,
     render_template,
 )
-from .models import Board
+from .models import Board, User
 from utils.helpers import (
     get_reduce_indexes,
     get_series_and_labels,
@@ -17,7 +17,7 @@ from utils.helpers import (
     get_series_and_labels_as_xy_dict,
     interval_type_to_hours,
 )
-from app import app
+from app import app, db
 
 
 # # create our little application :)
@@ -89,7 +89,25 @@ def index():
 @app.route('/db2', methods=['GET'])
 def bd_save_data():
     if request.method == 'GET':
-        dupa = request.args.keys()
+        nd = {}
+        l = []
+        r = User()
+        for key in request.args:
+            if hasattr(User, key):
+                vals = request.args.get(key)
+                nd[key] = vals
+                l.append(getattr(User, key))
+        # for k, v in nd.iteritems():
+        dupa = nd
+        user = User(name='Adam', des='Jones')
+        # user = User(**nd)
+        # db.session.add(user)
+        # db.session.commit()
+        # dupa = User.query.filter(*l).limit(12).all()
+        # dupa = User.query.filter(User.name, User.des).all()
+        dupa = User.query.filter(User.name).all()
+        dupa = User.query.filter(User.name == 'Adam').all()
+        print dupa
         return render_template('test_views.html', dupa=dupa)
 
 
