@@ -163,15 +163,6 @@ def get_corect_datetime_limit(request):
         return int(request['time_delta']) * map_int_type_to_multiplier[request['interval_type']]
     except:
         print request
-        print request
-        print request
-        print request
-        print request
-        print request
-        print request
-        print request
-        print request
-        print request
 
 
 def get_stats(series_data):

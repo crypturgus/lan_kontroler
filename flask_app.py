@@ -129,7 +129,7 @@ def get_view():
         s1, s2, s3, s4, dt, means = get_series_and_labels_as_xy_dict(entries)
         if not request.query_string:
             request_series = [1] * 4
-            return render_template("chart.html",
+            return render_template("chart_old.html",
                    s1=s1, s2=s2, s3=s3, s4=s4, dt=dt, limit=time_delta_hours, means=means, request_series=request_series)
         if not seria1:
             s1 = []
@@ -141,5 +141,5 @@ def get_view():
             s4 = []
         request_series_raw = [seria1, seria2, seria3, seria4]
         request_series = [1 if s else 0 for s in request_series_raw]
-        return render_template("chart.html",
+        return render_template("chart_old.html",
                s1=s1, s2=s2, s3=s3, s4=s4, dt=dt, limit=time_delta_hours, means=means, request_series=request_series)

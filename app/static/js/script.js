@@ -1,5 +1,5 @@
+
 nv.addGraph(function() {
-  console.log(jsdata_)
   var data = jsdata_['series'];
   var xlab = jsdata_['xlabel'];
   var chart;
@@ -9,7 +9,6 @@ nv.addGraph(function() {
   var zoom = 1;
   var w = width;
   var h = height;
-  var tickValues = jsdata_["tickValues"]
   var diff = 2;
   chart = nv.models.lineChart()
     .options({
@@ -25,10 +24,7 @@ nv.addGraph(function() {
   chart.width(w);
   chart.height(h);
   chart.xAxis
-    .axisLabel("DateTime (s)")
-    .tickFormat(d3.format(',.1f'))
-    .staggerLabels(true)
-    .tickValues(tickValues)
+    .axisLabel("DateTime")
     .tickFormat(function(d) {
       return xlab[d]
     });

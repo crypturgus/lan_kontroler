@@ -178,7 +178,7 @@ def index():
         else:
             request_data = {k: str(v) for k, v in request.args.items()}
             print type(request_data)
-        return render_template('test_views.html',
+        return render_template('chart.html',
                                series_data=json.dumps(series_data),
                                stats_data=stats_data,
                                request_data=request_data
@@ -187,6 +187,7 @@ def index():
         return 'O szit!'
 
 def prepare_data(sensor, used_series=('series1','series2','series3', 'series4' )):
+    sensor = reduce_data(sensor)
     tickValues = []
     series1 = {"color": "#800000", "values": [], 'key': 'series1'}
     series2 = {"color": "#ff7f0e", "values": [], 'key': 'series2'}
@@ -198,13 +199,27 @@ def prepare_data(sensor, used_series=('series1','series2','series3', 'series4' )
         series2['values'].append({'x': i, 'y': row.ia8})
         series3['values'].append({'x': i, 'y': row.ia14})
         series4['values'].append({'x': i, 'y': row.ia15})
-        dt['xlabel'].append(row.dt.strftime('%Y-%m-%d %H:%M:%S'))
+        # dt['xlabel'].append(row.dt.strftime('%Y-%m-%d %H:%M:%S'))
+        dt['xlabel'].append(row.dt.strftime('%d-%m-%Y %H:%M'))
+
         tickValues.append(i)
     correct_series_data =[s for s in [series1, series2, series3, series4]
                           if s['key'] in used_series]
     series_data = {'series': correct_series_data, 'tickValues': tickValues}
     series_data.update(dt)
     return series_data
+
+
+def reduce_data(sensor):
+    len_entries = len(sensor)
+    max_len_data = 60 / 3 * 24
+    # max_len_data = 15
+
+    if len_entries >= max_len_data:
+        red_indexes = get_reduce_indexes(len_entries, max_len_data)
+        new_entries = [sensor[i] for i in red_indexes]
+        sensor = new_entries
+    return sensor
 
 
 @app.route('/db2', methods=['GET'])
@@ -229,7 +244,7 @@ def bd_save_data():
         dupa = User.query.filter(User.name).all()
         dupa = User.query.filter(User.name == 'Adam').all()
         print dupa
-        return render_template('test_views.html', dupa=dupa)
+        return render_template('chart.html', dupa=dupa)
 
 @app.route('/db', methods=['GET'])
 def save_external_data():
@@ -296,7 +311,7 @@ def get_view():
         s1, s2, s3, s4, dt, means = get_series_and_labels_as_xy_dict(entries)
         if not request.query_string:
             request_series = [1] * 4
-            return render_template("chart.html",
+            return render_template("chart_old.html",
                    s1=s1, s2=s2, s3=s3, s4=s4, dt=dt, limit=time_delta_hours, means=means, request_series=request_series)
         if not seria1:
             s1 = []
@@ -308,5 +323,5 @@ def get_view():
             s4 = []
         request_series_raw = [seria1, seria2, seria3, seria4]
         request_series = [1 if s else 0 for s in request_series_raw]
-        return render_template("chart.html",
+        return render_template("chart_old.html",
                s1=s1, s2=s2, s3=s3, s4=s4, dt=dt, limit=time_delta_hours, means=means, request_series=request_series)
