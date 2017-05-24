@@ -1,4 +1,6 @@
+import datetime
 import os
+import json
 
 import sqlite3
 from flask import (
@@ -16,9 +18,11 @@ from utils.helpers import (
     get_query_with_time_delta,
     get_series_and_labels_as_xy_dict,
     interval_type_to_hours,
+    get_corect_datetime_limit,
+    get_stats,
 )
 from app import app, db
-
+from sqlalchemy.dialects import sqlite
 
 # # create our little application :)
 # app = Flask(__name__)
@@ -71,20 +75,137 @@ from app import app, db
 #     print 'Initialized the database.'
 #
 
-@app.route('/')
+# @app.route('/t',  methods=['GET'])
+# def index2():
+#     # time_delta=1&interval_type=hours&series1=on&series2=on
+#     data = 'DUPA'
+#     if request.method == 'GET':
+#         request_correct_dict = {}
+#         for key in request.args:
+#             if hasattr(Board, key):
+#                 vals = request.args.get(key)
+#                 request_correct_dict[key] = vals
+#         board = Board(**request_correct_dict)
+#         db.session.add(board)
+#         db.session.commit()
+#         print data
+#     return render_template('chart0.html', data=data)
+SERIES_TO_COLUMNS = {
+    'series1': 'ia7',
+    'series2': 'ia8',
+    'series3': 'ia14',
+    'series4': 'ia15',
+    'dt': 'dt'
+}
+COLUMNS_TO_SERIES = {v: k for k, v in SERIES_TO_COLUMNS.iteritems()}
+
+def get_columns_name(request_data):
+    col_names = []
+    for k, v in request_data.iteritems():
+        if k.startswith('series') and v == 'on':
+            col_names.append(SERIES_TO_COLUMNS[k])
+    return col_names
+
+
+@app.route('/t',  methods=['GET'])
+def chart_simple_use():
+    data = []
+    # ia7, ia8, ia14, ia15, dt
+    if request.method == 'GET':
+        if not request.args:
+            return render_template('chart0.html', data=data)
+        col_names = get_columns_name(request.args)
+
+        time_detla = get_corect_datetime_limit(request.args)
+        print time_detla
+
+        columns_list = []
+        for col_ in col_names:
+            columns_list.append(getattr(Board, col_))
+        columns_list.append(Board.dt)
+
+        now_ = datetime.datetime.now()
+        time_min = now_ - datetime.timedelta(hours=time_detla)
+        series_data = []
+        dd = {}
+        series_len = len(columns_list)
+        col_names.append('dt')
+        for c in col_names:
+            s = COLUMNS_TO_SERIES[c]
+            dd[c] = {'key': s, 'values': [], 'color': ''}
+        xlable_data = []
+        for i_, row in enumerate(db.session.query(*columns_list).filter(columns_list[-1] >= time_min).order_by(columns_list[-1].desc())):
+            series_data.append(row)
+            for i, d in enumerate(row):
+                if col_names[i] == 'dt':
+                    # xlable_data.append(d.strftime("%Y-%m-%d %H:%M:%S"))
+                    continue
+                # dd[col_names[i]]['values'].appenad({'x': i_, 'y': d})
+
+                # dd[col_names[i]]['values'].append(d)
+        data = dd
+        dd['xlabel'] = xlable_data
+        print data
+    return render_template('chart0.html', data=data)
+
+
+@app.route('/', methods=['GET'])
+@app.route('/chart', methods=['GET'])
 def index():
-    # return redirect(url_for('get_view'))
-    # select ia7, ia8, ia14, ia15, dt from board  where ia14 is not null and dt > "{}" order by dt ASC'
-    # sensor = Board.query.filter(Board.ia7, Board.ia8, Board.ia14, Board.ia15, Board.dt).all()
-    sensor = Board.query.filter(Board.ia7, Board.ia8, Board.ia14, Board.ia15, Board.dt).limit(12).all()
-    l = []
-    for row in sensor:
-        l.append(row.id)
-        l.append(row.id)
-        l.append(row.id)
-        l.append(row.id)
-        l.append(row.id)
-    return render_template('test_views.html', dupa=l)
+    if request.method == 'GET':
+        if request.args:
+            time_detla = get_corect_datetime_limit(request.args)
+        else:
+            time_detla = 12
+        now_ = datetime.datetime.now().replace(microsecond=0)
+        time_min = now_ - datetime.timedelta(hours=time_detla)
+        used_series = [s for s, v in request.args.items() if s.startswith('series') and v == 'on']
+        data_from_db = Board.query.filter(Board.dt >= time_min).with_entities(Board.ia7, Board.ia8, Board.ia14, Board.ia15, Board.dt).all()
+        if used_series:
+            series_data = prepare_data(data_from_db, used_series)
+        else:
+            series_data = prepare_data(data_from_db)
+        min_list = []
+        max_list = []
+        for s in series_data['series']:
+            y = [k['y'] for k in s['values']]
+            if y:
+                min_list.append(min(y))
+                max_list.append(max(y))
+        stats_data = get_stats(series_data)
+        if not request.args:
+            request_data = {"series1": "on", "time_delta": "12", "series2": "on", "series3": "on", "interval_type": "hours", "series4": "on"}
+        else:
+            request_data = {k: str(v) for k, v in request.args.items()}
+            print type(request_data)
+        return render_template('test_views.html',
+                               series_data=json.dumps(series_data),
+                               stats_data=stats_data,
+                               request_data=request_data
+                               )
+    else:
+        return 'O szit!'
+
+def prepare_data(sensor, used_series=('series1','series2','series3', 'series4' )):
+    tickValues = []
+    series1 = {"color": "#800000", "values": [], 'key': 'series1'}
+    series2 = {"color": "#ff7f0e", "values": [], 'key': 'series2'}
+    series3 = {"color": "#000080", "values": [], 'key': 'series3'}
+    series4 = {"color": "#000080", "values": [], 'key': 'series4'}
+    dt = {"xlabel": []}
+    for i, row in enumerate(sensor):
+        series1['values'].append({'x': i, 'y': row.ia7})
+        series2['values'].append({'x': i, 'y': row.ia8})
+        series3['values'].append({'x': i, 'y': row.ia14})
+        series4['values'].append({'x': i, 'y': row.ia15})
+        dt['xlabel'].append(row.dt.strftime('%Y-%m-%d %H:%M:%S'))
+        tickValues.append(i)
+    correct_series_data =[s for s in [series1, series2, series3, series4]
+                          if s['key'] in used_series]
+    series_data = {'series': correct_series_data, 'tickValues': tickValues}
+    series_data.update(dt)
+    return series_data
+
 
 @app.route('/db2', methods=['GET'])
 def bd_save_data():
@@ -110,22 +231,33 @@ def bd_save_data():
         print dupa
         return render_template('test_views.html', dupa=dupa)
 
-
-
 @app.route('/db', methods=['GET'])
-def bd_save_external_data():
+def save_external_data():
     if request.method == 'GET':
-        db = get_db()
-        ia8 = request.args.get('ia8')
-        if ia8 == '-60.0':
-            ia8 = None
-        db.execute('insert into board (ia7, ia8, ia14, ia15) values (?, ?, ?, ?)',
-                   [request.args.get('ia7'),
-                    ia8,
-                    request.args.get('ia14'),
-                    request.args.get('ia15')])
-        db.commit()
-    return 'ok'
+        request_correct_dict = {}
+        for key in request.args:
+            if hasattr(Board, key):
+                val = request.args.get(key)
+                request_correct_dict[key] = val
+        board = Board(**request_correct_dict)
+        db.session.add(board)
+        db.session.commit()
+    return True
+
+# @app.route('/db', methods=['GET'])
+# def bd_save_external_data():
+#     if request.method == 'GET':
+#         db = get_db()
+#         ia8 = request.args.get('ia8')
+#         if ia8 == '-60.0':
+#             ia8 = None
+#         db.execute('insert into board (ia7, ia8, ia14, ia15) values (?, ?, ?, ?)',
+#                    [request.args.get('ia7'),
+#                     ia8,
+#                     request.args.get('ia14'),
+#                     request.args.get('ia15')])
+#         db.commit()
+#     return 'ok'
 
 
 

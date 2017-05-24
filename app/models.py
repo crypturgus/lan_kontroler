@@ -49,6 +49,9 @@ class Board(db.Model):
     sec4 = db.Column(db.Integer)
     dt = db.Column(db.DateTime)
 
+    def __repr__(self):
+        return "{}, {}, {}, {}".format(self.ia14, self.ia15, self.ia7, self.ia8)
+
 
 class User(db.Model):
     __tablename__ = 'user'
@@ -58,3 +61,4 @@ class User(db.Model):
 
     def __repr__(self):
         return '<User %r>' % (self.name)
+

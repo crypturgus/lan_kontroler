@@ -1,6 +1,49 @@
 {% extends "layout.html" %}
 {% block body %}
-<p>dupadupadupadupadupadupadupadupadupadupadupadupadupadupadupa</p>
-<p>{{ myname }}</p>
-<p>{{ dupa }}</p>
+{{ smietki }}
+<p>{{ series_data2 }}</p>
+<p>{{ request_data }}</p>
+
+<form id="setHoursForm" action="{{ url_for('get_view') }}" method='get'  style="margin-bottom: 10px;" name="dupadupa">
+                Delta:<input type="number" name="time_delta" id="time_delta" value="12"><br>
+                <input type="radio" name="interval_type" value="hours" checked> hours
+                <input type="radio" name="interval_type" value="days"> days
+                <input type="radio" name="interval_type" value="weeks"> weeks
+                <input type="radio" name="interval_type" value="all"> all
+                <br>
+                <br><input type="checkbox" name="series1" checked>KORYTARZ
+                <br><input type="checkbox" name="series2" checked>ZEWNETRZE
+                <br><input type="checkbox" name="series3" checked>PODWYZSZENIE
+                <br><input type="checkbox" name="series4" checked>WILGOTNOSC
+                <br>
+                <input type="submit" value="OK">
+            </form>
+<div class="col-md-9 text-center">
+    <div id="chart1" class='with-transitions'>
+        <svg></svg>
+        <script>
+    var jsdata_ = {{ series_data | safe }}
+    var checkboxes = document.getElementById("setHoursForm");
+    var request_data_js = {{ request_data | safe }}
+    var limit = request_data_js["time_delta"]
+    if (limit != undefined) {
+        document.getElementById("time_delta").value = limit;
+
+    }
+    for (var i=0; i<checkboxes.length; i++)  {
+        if (checkboxes[i].type == 'checkbox') {
+            if (checkboxes[i].name in request_data_js) {
+                checkboxes[i].checked = true;
+            }
+            else {
+            checkboxes[i].checked = false;
+            }
+        }
+    }
+
+</script>
+    </div>
+</div>
+<script src="{{ url_for('static', filename='js/script2.js') }} "></script>
+
 {% endblock %}
