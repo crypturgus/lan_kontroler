@@ -1,26 +1,69 @@
 {% extends "layout.html" %}
 {% block body %}
-<form id="setHoursForm" action="{{ url_for('get_view') }}" method='get'  style="margin-bottom: 10px;" name="dupadupa">
+<div class="container">
+    <div class="row">
+        <div class="col-md-2 text-center">
+            <p align="center">DANE Z OSTATNICH: {{ request_data['time_delta'] }} {{ request_data['interval_type'][0] }}</p>
+            <form id="setHoursForm" action="{{ url_for('get_view') }}" method='get'  style="margin-bottom: 10px;" name="dupadupa">
                 Delta:<input type="number" name="time_delta" id="time_delta" value="12"><br>
-                <input type="radio" name="interval_type" value="hours" checked> hours
-                <input type="radio" name="interval_type" value="days"> days
-                <input type="radio" name="interval_type" value="weeks"> weeks
-                <input type="radio" name="interval_type" value="all"> all
+                <input type="radio" name="interval_type" value="hours" checked id="hours"> hours
+                <input type="radio" name="interval_type" value="days" id="days"> days
+                <input type="radio" name="interval_type" value="weeks" id="weeks"> weeks
+                <input type="radio" name="interval_type" value="all" id="all"> all
                 <br>
-                <br><input type="checkbox" name="series1" checked>KORYTARZ
-                <br><input type="checkbox" name="series2" checked>ZEWNETRZE
-                <br><input type="checkbox" name="series3" checked>PODWYZSZENIE
-                <br><input type="checkbox" name="series4" checked>WILGOTNOSC
+                <br><input type="checkbox" name="series1" id="series1" checked>KORYTARZ
+                <br><input type="checkbox" name="series2" id="series2" checked>ZEWNETRZE
+                <br><input type="checkbox" name="series3" id="series3" checked>PODWYZSZENIE
+                <br><input type="checkbox" name="series4" id="series4" checked>WILGOTNOSC
                 <br>
                 <input type="submit" value="OK">
             </form>
-<div class="col-md-9 text-center">
-    <div id="chart1" class='with-transitions'>
-        <svg></svg>
-        <script>
-    var jsdata_ = {{ series_data | safe }}
-    var checkboxes = document.getElementById("setHoursForm");
+            {% set series_map = {
+            "series1" : "Korytarz",
+            "series2" : "Zewnetrze",
+            "series3" : "Podwyzszenie",
+            "series4" : "Wilgotnosc" }
+            %}
+
+
+            {% set series_order = ["series1", "series2", "series3", "series4"] %}
+
+            <div class="col-md-2 text-center">
+                <table  border="1">
+                    <tr>
+                        <th>Czujnik</th><th>Min</th><th>Max</th><th>Średnia</th><th>Wzrost</th>
+                        <th>Start</th><th>Stop</th>
+                    </tr>
+                    {% for series_name in series_order %}
+                    {% if series_name in stats_data %}
+                    <tr>
+                        <td>{{ series_map[series_name]}}</td>
+                        <td>{{ stats_data[series_name]['min']}}</td>
+                        <td>{{ stats_data[series_name]['max']}}</td>
+                        <td>{{ stats_data[series_name]['srednia'] }}</td>
+                        <td>{{ stats_data[series_name]['wzrost']}}</td>
+                        <td>{{ stats_data[series_name]['start']}}</td>
+                        <td>{{ stats_data[series_name]['stop']}}</td>
+                    </tr>
+                    {% endif %}
+                    {% endfor %}
+
+                </table>
+            </div>
+        </div>
+        <div class="col-md-9 text-center">
+            <div id="chart1" class='with-transitions'>
+                <svg></svg>
+            </div>
+        </div></div>
+</div>
+
+
+<script>
     var request_data_js = {{ request_data | safe }}
+    var jsdata_ = {{ series_data | safe }}
+    var checkboxtt = document.getElementById(request_data_js['interval_type']);
+    ttcheckbox.checked = true;
     var limit = request_data_js["time_delta"]
     if (limit != undefined) {
         document.getElementById("time_delta").value = limit;
@@ -38,8 +81,6 @@
     }
 
 </script>
-    </div>
-</div>
 <script src="{{ url_for('static', filename='js/script.js') }} "></script>
 
 {% endblock %}

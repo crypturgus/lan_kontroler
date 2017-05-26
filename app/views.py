@@ -99,6 +99,14 @@ SERIES_TO_COLUMNS = {
 }
 COLUMNS_TO_SERIES = {v: k for k, v in SERIES_TO_COLUMNS.iteritems()}
 
+SERIES_TO_NAMES = {
+    'series1': 'KORYTARZ',
+    'series2': 'ZEWNETRZE',
+    'series3': 'PODWYZSZENIE',
+    'series4': 'WILGOTNOSC',
+    'dt': 'dt'
+}
+
 def get_columns_name(request_data):
     col_names = []
     for k, v in request_data.iteritems():
@@ -138,11 +146,7 @@ def chart_simple_use():
             series_data.append(row)
             for i, d in enumerate(row):
                 if col_names[i] == 'dt':
-                    # xlable_data.append(d.strftime("%Y-%m-%d %H:%M:%S"))
                     continue
-                # dd[col_names[i]]['values'].appenad({'x': i_, 'y': d})
-
-                # dd[col_names[i]]['values'].append(d)
         data = dd
         dd['xlabel'] = xlable_data
         print data
@@ -165,26 +169,29 @@ def index():
             series_data = prepare_data(data_from_db, used_series)
         else:
             series_data = prepare_data(data_from_db)
-        min_list = []
-        max_list = []
-        for s in series_data['series']:
-            y = [k['y'] for k in s['values']]
-            if y:
-                min_list.append(min(y))
-                max_list.append(max(y))
         stats_data = get_stats(series_data)
         if not request.args:
             request_data = {"series1": "on", "time_delta": "12", "series2": "on", "series3": "on", "interval_type": "hours", "series4": "on"}
         else:
             request_data = {k: str(v) for k, v in request.args.items()}
             print type(request_data)
+
+        set_correct_series_names(series_data)
+
         return render_template('chart.html',
                                series_data=json.dumps(series_data),
                                stats_data=stats_data,
-                               request_data=request_data
+                               request_data=request_data,
                                )
     else:
         return 'O szit!'
+
+
+def set_correct_series_names(series_data):
+    for s in series_data['series']:
+        if s['key'] in SERIES_TO_NAMES:
+            s['key'] = SERIES_TO_NAMES[s['key']]
+
 
 def prepare_data(sensor, used_series=('series1','series2','series3', 'series4' )):
     sensor = reduce_data(sensor)
@@ -199,13 +206,11 @@ def prepare_data(sensor, used_series=('series1','series2','series3', 'series4' )
         series2['values'].append({'x': i, 'y': row.ia8})
         series3['values'].append({'x': i, 'y': row.ia14})
         series4['values'].append({'x': i, 'y': row.ia15})
-        # dt['xlabel'].append(row.dt.strftime('%Y-%m-%d %H:%M:%S'))
         dt['xlabel'].append(row.dt.strftime('%d-%m-%Y %H:%M'))
 
-        tickValues.append(i)
     correct_series_data =[s for s in [series1, series2, series3, series4]
                           if s['key'] in used_series]
-    series_data = {'series': correct_series_data, 'tickValues': tickValues}
+    series_data = {'series': correct_series_data}
     series_data.update(dt)
     return series_data
 
@@ -220,6 +225,10 @@ def reduce_data(sensor):
         new_entries = [sensor[i] for i in red_indexes]
         sensor = new_entries
     return sensor
+
+@app.route('/ttt')
+def test_view_bb():
+    return render_template('dupaaa.html')
 
 
 @app.route('/db2', methods=['GET'])

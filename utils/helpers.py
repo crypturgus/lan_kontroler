@@ -183,10 +183,10 @@ def get_stats(series_data):
         series_values = [y['y'] for y in s['values'] if y['y']]
         stats_data[s['key']] = dict()
         if series_values:
-            stats_data[s['key']]['start_val'] = series_values[0]
-            stats_data[s['key']]['stop_val'] = series_values[-1]
-            stats_data[s['key']]['increase'] = stats_data[s['key']]['stop_val'] - stats_data[s['key']]['start_val']
-            stats_data[s['key']]['average'] = sum(series_values) / float(len(series_values))
+            stats_data[s['key']]['start'] = series_values[0]
+            stats_data[s['key']]['stop'] = series_values[-1]
+            stats_data[s['key']]['wzrost'] = stats_data[s['key']]['stop'] - stats_data[s['key']]['start']
+            stats_data[s['key']]['srednia'] = round(sum(series_values) / float(len(series_values)), 2)
             stats_data[s['key']]['min'] = min(series_values)
             stats_data[s['key']]['max'] = max(series_values)
     return stats_data
