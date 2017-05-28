@@ -12,7 +12,7 @@
                 <input type="radio" name="interval_type" value="all" id="all"> all
                 <br>
                 <br><input type="checkbox" name="series1" id="series1" checked>KORYTARZ
-                <br><input type="checkbox" name="series2" id="series2" checked>ZEWNETRZE
+                <input type="checkbox" name="series2" id="series2" checked>ZEWNETRZE
                 <br><input type="checkbox" name="series3" id="series3" checked>PODWYZSZENIE
                 <br><input type="checkbox" name="series4" id="series4" checked>WILGOTNOSC
                 <br>
@@ -57,29 +57,34 @@
             </div>
         </div></div>
 </div>
-
+{{ request_data }}
 
 <script>
     var request_data_js = {{ request_data | safe }}
     var jsdata_ = {{ series_data | safe }}
     var checkboxtt = document.getElementById(request_data_js['interval_type']);
-    ttcheckbox.checked = true;
+    checkboxtt.checked = true;
     var limit = request_data_js["time_delta"]
     if (limit != undefined) {
         document.getElementById("time_delta").value = limit;
 
     }
+    var obj = {"success":"You are welcome"};
+    var keys = Object.keys(obj);
+    var checkboxes = document.getElementById("setHoursForm");
+    var si = 0;
     for (var i=0; i<checkboxes.length; i++)  {
-        if (checkboxes[i].type == 'checkbox') {
-            if (checkboxes[i].name in request_data_js) {
+        if (checkboxes[i].type == 'checkbox')   {
+            if (checkboxes[i].id in request_data_js){
                 checkboxes[i].checked = true;
+
             }
             else {
-            checkboxes[i].checked = false;
+                checkboxes[i].checked = false;
+
             }
         }
     }
-
 </script>
 <script src="{{ url_for('static', filename='js/script.js') }} "></script>
 
