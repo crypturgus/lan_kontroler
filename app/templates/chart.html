@@ -1,8 +1,8 @@
 {% extends "layout.html" %}
 {% block body %}
-<div class="container">
+<div class="container-fluid">
     <div class="row">
-        <div class="col-md-2 text-center">
+        <div class="col-md-3 text-center">
             <p align="center">DANE Z OSTATNICH: {{ request_data['time_delta'] }} {{ request_data['interval_type'][0] }}</p>
             <form id="setHoursForm" action="{{ url_for('get_view') }}" method='get'  style="margin-bottom: 10px;" name="dupadupa">
                 Delta:<input type="number" name="time_delta" id="time_delta" value="12"><br>
@@ -11,12 +11,14 @@
                 <input type="radio" name="interval_type" value="weeks" id="weeks"> weeks
                 <input type="radio" name="interval_type" value="all" id="all"> all
                 <br>
+<div class="container-fluid">
                 <br><input type="checkbox" name="series1" id="series1" checked>KORYTARZ
-                <input type="checkbox" name="series2" id="series2" checked>ZEWNETRZE
+                <br><input type="checkbox" name="series2" id="series2" checked>ZEWNETRZE
                 <br><input type="checkbox" name="series3" id="series3" checked>PODWYZSZENIE
                 <br><input type="checkbox" name="series4" id="series4" checked>WILGOTNOSC
                 <br>
                 <input type="submit" value="OK">
+</div>
             </form>
             {% set series_map = {
             "series1" : "Korytarz",
@@ -28,8 +30,8 @@
 
             {% set series_order = ["series1", "series2", "series3", "series4"] %}
 
-            <div class="col-md-2 text-center">
-                <table  border="1">
+            <div class="col-md-3 text-center">
+                    <table id="total votes" class="table table-condensed text-centered">
                     <tr>
                         <th>Czujnik</th><th>Min</th><th>Max</th><th>Średnia</th><th>Wzrost</th>
                         <th>Start</th><th>Stop</th>
@@ -57,7 +59,6 @@
             </div>
         </div></div>
 </div>
-{{ request_data }}
 
 <script>
     var request_data_js = {{ request_data | safe }}
@@ -72,12 +73,10 @@
     var obj = {"success":"You are welcome"};
     var keys = Object.keys(obj);
     var checkboxes = document.getElementById("setHoursForm");
-    var si = 0;
     for (var i=0; i<checkboxes.length; i++)  {
         if (checkboxes[i].type == 'checkbox')   {
             if (checkboxes[i].id in request_data_js){
                 checkboxes[i].checked = true;
-
             }
             else {
                 checkboxes[i].checked = false;
