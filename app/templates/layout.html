@@ -8,61 +8,40 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.css') }}" >
     <link rel="stylesheet" href="{{ url_for('static', filename='css/chartist.min.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/nv.d3.css') }}">
-    <!--<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">-->
-
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.2/d3.min.js" charset="utf-8"></script>
     <script src="{{ url_for('static', filename='js/nv.d3.js') }} "></script>
-
-
-
-
-    <!--<script src="{{ url_for('static', filename='js/chartist.js') }} "></script>-->
-    <!--<script src="{{ url_for('static', filename='js/bootstrap-filestyle.min.js') }}"></script>-->
-	<!--<link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">-->
 </head>
-<body>http://127.0.0.1:5000/chart
-
-<!--<nav class="navbar navbar-default" role="navigation">-->
+<body>
     <nav class="navbar navbar-inverse navbar-static-top" role="navigation">
 
       <div class="container-fluid">
           <!-- Grupowanie "marki" i przycisku rozwijania mobilnego menu -->
           <div class="navbar-header">
               <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-2">
-                  <!--<span class="sr-only">Rozwiń nawigację</span>-->
                   <span class="icon-bar"></span>
                   <span class="icon-bar"></span>
                   <span class="icon-bar"></span>
               </button>
               <a class="navbar-brand" href="{{ url_for('index') }}">ChartsProject</a>
-
           </div>
 
           <!-- Grupowanie elementów menu w celu lepszego wyświetlania na urządzeniach moblinych -->
           <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-2">
               <ul class="nav navbar-nav">
-                <li><a href="{{ url_for('get_view') + '?time_delta=12&interval_type=hours&series1=on&series2=on' }}">-12h S1&S2</a></li>
-                <li><a href="{{ url_for('get_view') + '?time_delta=12&interval_type=hours&series1=on' }}">-12h S1</a></li>
-                <li><a href="{{ url_for('get_view') + '?time_delta=12&interval_type=hours&series1=on&series2=on&series3=on&series4=on' }}">-12h</a></li>
-                <li><a href="{{ url_for('get_view') + '?time_delta=1&interval_type=days&series1=on&series2=on&series3=on&series4=on' }}">1d</a></li>
-                <li><a href="{{ url_for('get_view') + '?time_delta=1&interval_type=weeks&series1=on&series2=on&series3=on&series4=on' }}">1week</a></li>
-                <li><a href="{{ url_for('get_view') + '?time_delta=52&interval_type=weeks&series1=on&series2=on&series3=on&series4=on' }}">1year</a></li>
+                <li><a href="{{ url_for('index') + '?time_delta=12&interval_type=hours&series1=on&series2=on' }}">-12h S1&S2</a></li>
+                <li><a href="{{ url_for('index') + '?time_delta=12&interval_type=hours&series1=on' }}">-12h S1</a></li>
+                <li><a href="{{ url_for('index') + '?time_delta=12&interval_type=hours&series1=on&series2=on&series3=on&series4=on' }}">-12h</a></li>
+                <li><a href="{{ url_for('index') + '?time_delta=1&interval_type=days&series1=on&series2=on&series3=on&series4=on' }}">1d</a></li>
+                <li><a href="{{ url_for('index') + '?time_delta=1&interval_type=weeks&series1=on&series2=on&series3=on&series4=on' }}">1week</a></li>
+                <li><a href="{{ url_for('index') + '?time_delta=52&interval_type=weeks&series1=on&series2=on&series3=on&series4=on' }}">1year</a></li>
               </ul>
-          </div><!-- /.navbar-collapse -->
-      </div><!-- /.container-fluid -->
+          </div>
+      </div>
   </nav>
   <!-- JavaScript plugins (requires jQuery) -->
   <script src="{{ url_for('static', filename='js/jquery-3.2.1.min.js') }} "></script>
   <script src="{{ url_for('static', filename='js/bootstrap.js') }} "></script>
-
-
-
-
-
-
 {% block body %}{% endblock %}
-<!--</div>-->
 {% block javascript %}{% endblock %}
 </body>
 </html>

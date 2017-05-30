@@ -4,7 +4,7 @@
     <div class="row">
         <div class="col-md-3 text-center">
             <p align="center">DANE Z OSTATNICH: {{ request_data['time_delta'] }} {{ request_data['interval_type'][0] }}</p>
-            <form id="setHoursForm" action="{{ url_for('get_view') }}" method='get'  style="margin-bottom: 10px;" name="dupadupa">
+            <form id="setHoursForm" action="{{ url_for('index') }}" method='get'  style="margin-bottom: 10px;" name="dupadupa">
                 Delta:<input type="number" name="time_delta" id="time_delta" value="12"><br>
                 <input type="radio" name="interval_type" value="hours" checked id="hours"> hours
                 <input type="radio" name="interval_type" value="days" id="days"> days

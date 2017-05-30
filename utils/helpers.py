@@ -1,6 +1,69 @@
 import datetime
 import json
 
+SERIES_TO_COLUMNS = {
+    'series1': 'ia7',
+    'series2': 'ia8',
+    'series3': 'ia14',
+    'series4': 'ia15',
+    'dt': 'dt'
+}
+COLUMNS_TO_SERIES = {v: k for k, v in SERIES_TO_COLUMNS.iteritems()}
+
+SERIES_TO_NAMES = {
+    'series1': 'KORYTARZ',
+    'series2': 'ZEWNETRZE',
+    'series3': 'PODWYZSZENIE',
+    'series4': 'WILGOTNOSC',
+    'dt': 'dt'
+}
+
+
+def set_correct_series_names(series_data):
+    for s in series_data['series']:
+        if s['key'] in SERIES_TO_NAMES:
+            s['key'] = SERIES_TO_NAMES[s['key']]
+
+
+def prepare_data(sensor, used_series=('series1','series2','series3', 'series4' )):
+    sensor = reduce_data(sensor)
+    tickValues = []
+    series1 = {"color": "#800000", "values": [], 'key': 'series1'}
+    series2 = {"color": "#ff7f0e", "values": [], 'key': 'series2'}
+    series3 = {"color": "#000080", "values": [], 'key': 'series3'}
+    series4 = {"color": "#000080", "values": [], 'key': 'series4'}
+    dt = {"xlabel": []}
+    for i, row in enumerate(sensor):
+        series1['values'].append({'x': i, 'y': row.ia7})
+        series2['values'].append({'x': i, 'y': row.ia8})
+        series3['values'].append({'x': i, 'y': row.ia14})
+        series4['values'].append({'x': i, 'y': row.ia15})
+        dt['xlabel'].append(row.dt.strftime('%d-%m-%Y %H:%M'))
+
+    correct_series_data =[s for s in [series1, series2, series3, series4]
+                          if s['key'] in used_series]
+    series_data = {'series': correct_series_data}
+    series_data.update(dt)
+    return series_data
+
+
+def reduce_data(sensor):
+    len_entries = len(sensor)
+    max_len_data = 60 / 3 * 24
+    # max_len_data = 15
+
+    if len_entries >= max_len_data:
+        red_indexes = get_reduce_indexes(len_entries, max_len_data)
+        new_entries = [sensor[i] for i in red_indexes]
+        sensor = new_entries
+    return sensor
+def get_columns_name(request_data):
+    col_names = []
+    for k, v in request_data.iteritems():
+        if k.startswith('series') and v == 'on':
+            col_names.append(SERIES_TO_COLUMNS[k])
+    return col_names
+
 
 def get_query_with_time_delta(delta=3):
     hour_before = datetime.datetime.now().replace(microsecond=0) - datetime.timedelta(hours=delta)
