@@ -79,6 +79,7 @@ def index():
 @app.route('/db', methods=['GET'])
 def bd_save_external_data():
     if request.method == 'GET':
+        print request.args
         db = get_db()
         ia8 = request.args.get('ia8')
         if ia8 == '-60.0':
