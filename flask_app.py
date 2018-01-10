@@ -16,8 +16,11 @@ from utils.helpers import (
     get_query_with_time_delta,
     get_series_and_labels_as_xy_dict,
     interval_type_to_hours,
+    get_last_state,
+    send_notification,
+    save_last_state
 )
-
+from utils.notification import Nofication
 
 # create our little application :)
 app = Flask(__name__)
@@ -79,7 +82,13 @@ def index():
 @app.route('/db', methods=['GET'])
 def bd_save_external_data():
     if request.method == 'GET':
-        print request.args
+        last_state = get_last_state()
+        new_state = int(request.args.get('inp1d'))
+        if last_state == 0 and new_state == 1:
+            send_notification()
+        else:
+            save_last_state(new_state)
+
         db = get_db()
         ia8 = request.args.get('ia8')
         if ia8 == '-60.0':
@@ -91,8 +100,6 @@ def bd_save_external_data():
                     request.args.get('ia15')])
         db.commit()
     return 'ok'
-
-
 
 # @app.route('/redir', methods=['POST'])
 # def redir_view():

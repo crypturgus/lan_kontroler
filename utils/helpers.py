@@ -1,6 +1,12 @@
 import datetime
 import json
+import os
+import pickle
 
+from utils.notification import Nofication
+from myconf import get_config_data
+
+STATE_FILE = 'state_file.'
 
 def get_query_with_time_delta(delta=3):
     hour_before = datetime.datetime.now().replace(microsecond=0) - datetime.timedelta(hours=delta)
@@ -151,4 +157,27 @@ def get_reduce_indexes(len_data, max_len=480):
     if red_list[-1] != len_data - 1:
         red_list.append(len_data -1)
     return red_list
-    
+
+
+def save_last_state(val):
+    with open(STATE_FILE, 'w') as f:
+        pickle.dump(val, f)
+    return val
+
+
+def get_last_state():
+    if not os.path.isfile(STATE_FILE):
+        with open(STATE_FILE, 'w') as f:
+            val = 1
+            pickle.dump(val, f)
+    else:
+        with open(STATE_FILE, 'r') as f:
+            val = pickle.load(f)
+    return val
+
+
+def send_notification():
+    data = get_config_data()
+    Nofication.email_sender(**data)
+    save_last_state(1)
+    return True
